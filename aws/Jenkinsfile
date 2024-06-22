@@ -1,0 +1,28 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clone GitHub Repo') {
+            steps {
+                git branch: 'main', credentialsId: 'jenkins-github-creds', url: 'https://github.com/ityourway/learning-jenkins-repo.git'
+            }
+        }
+        stage('Create S3 Bucket') {
+            steps {
+                withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'jenkins-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                aws s3 mb s3://ityourway-jenkins-bucket
+                sleep 60
+  }
+                
+            }
+        }
+        stage('Delete S3 Bucket') {
+            steps {
+                withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'jenkins-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                aws s3 rb s3://ityourway-jenkins-bucket
+}
+
+            }
+        }
+    }
+}
