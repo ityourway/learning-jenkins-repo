@@ -13,8 +13,9 @@ pipeline {
             steps {
                 script {
                 withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'jenkins-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                aws s3 mb s3://ityourway-jenkins-bucket
-                sleep 60
+                
+                sh 'aws s3 mb s3://ityourway-jenkins-bucket'
+                sh 'sleep 60'
                  }
                 }           
             }
@@ -23,7 +24,9 @@ pipeline {
             steps {
                 script {
                 withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'jenkins-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                sh '''
                 aws s3 rb s3://ityourway-jenkins-bucket
+                '''
 }
                 }
             }
