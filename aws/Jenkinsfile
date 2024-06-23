@@ -3,12 +3,12 @@ pipeline {
     parameters {
         string(name: 'BRANCH', defaultValue: 'main', description: 'Pass the name of branch to build from ')
         string(name: 'REPO_URL', defaultValue: 'https://github.com/ityourway/learning-jenkins-repo.git', description: 'Pass the Repository url to build from ')
-        string(name: 'S3_BUCKET_NAME',description: 'Enter your preffered name for the s3 bucket')
+        string(name: 'S3_BUCKET_VERSION',description: 'Enter your preffered VERSION for the s3 bucket, Eg . V001')
         }
     environment { 
         BRANCH = "${params.BRANCH}"
         REPO_URL = "${params.REPO_URL}"
-        S3_BUCKET_NAME = "${params.S3_BUCKET_NAME}"
+        S3_BUCKET_VERSION = "${params.S3_BUCKET_VERSION}"
 
     }
     stages {
@@ -24,7 +24,7 @@ pipeline {
                 script {
                 withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'jenkins-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                 
-                sh "aws s3 mb s3://${S3_BUCKET_NAME}"
+                sh "aws s3 mb s3://ITYOURWAY-S3-${S3_BUCKET_VERSION}"
                 sh "sleep 60"
                  }
                 }           
@@ -35,7 +35,7 @@ pipeline {
                 script {
                 withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'jenkins-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                 sh """
-                aws s3 rb s3://${S3_BUCKET_NAME}
+                aws s3 rb s3://ITYOURWAY-S3-${S3_BUCKET_VERSION}
                 """
 }
                 }
