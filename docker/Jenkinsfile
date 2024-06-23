@@ -22,10 +22,10 @@ pipeline {
                 script {
              //   withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'jenkins-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                 
-                sh "ls ${WORKSPACE}/docker"
-                sh "chmod 777 ${WORKSPACE}/docker/Dockerfile"
-                sh "cd ${WORKSPACE}/docker"
-                sh "docker build -t oxer-html-image ."
+                dir('docker') {
+                 sh "docker build -t oxer-html-image ."
+}
+                
                  }
                 }           
             }
@@ -35,6 +35,7 @@ pipeline {
                 script {
                // withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'jenkins-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                 sh """
+                docker tag oxer-html-image ityourway/oxer-html-repo:v001
                 docker push ityourway/oxer-html-repo:v001
                 """
 }
