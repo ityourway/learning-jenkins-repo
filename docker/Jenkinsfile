@@ -46,5 +46,26 @@ pipeline {
 }
                 }
             }
+        stage('Deploy On Remote Server') {
+            steps {
+                 script {
+                  sshPublisher(
+                   continueOnError: false, failOnError: true,
+                   publishers: [
+                    sshPublisherDesc(
+                     configName: "test_server",
+                     verbose: true,
+                     transfers: [
+                      sshTransfer(
+                       sourceFiles: "",
+                       removePrefix: "",
+                       remoteDirectory: "",
+                       execCommand: "docker run -itd --name oxer-app -p 80:80 ityourway/oxer-html-repo:v001"
+                      )
+                     ])
+                   ])
+                 }
+                }
+            }
         }
     }
