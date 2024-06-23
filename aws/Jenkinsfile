@@ -1,11 +1,15 @@
 pipeline {
     agent any
-
+    parameters {
+        string(name: 'BRANCH', defaultValue: 'main', description: 'Pass the name of branch to build from ')
+        string(name: 'REPO_URL', defaultValue: 'https://github.com/ityourway/learning-jenkins-repo.git', description: 'Pass the Repository url to build from ')
+        string(name: 'S3_BUCKET_NAME',description: 'Enter your preffered name for the s3 bucket')
+        }
     stages {
         stage('Clone GitHub Repo') {
             steps {
                 script {
-                git branch: 'main', credentialsId: 'jenkins-github-creds', url: 'https://github.com/ityourway/learning-jenkins-repo.git'
+                git branch: "${params.BRANCH}", credentialsId: 'jenkins-github-creds', url: "${params.REPO_URL}"
             }
         }
         }
@@ -14,8 +18,8 @@ pipeline {
                 script {
                 withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'jenkins-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                 
-                sh 'aws s3 mb s3://ityourway-jenkins-bucket'
-                sh 'sleep 60'
+                sh "aws s3 mb s3://${params.S3_BUCKET_NAME}"
+                sh "sleep 60"
                  }
                 }           
             }
@@ -24,9 +28,9 @@ pipeline {
             steps {
                 script {
                 withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'jenkins-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
-                sh '''
-                aws s3 rb s3://ityourway-jenkins-bucket
-                '''
+                sh """
+                aws s3 rb s3://${params.S3_BUCKET_NAME}
+                """
 }
                 }
             }
