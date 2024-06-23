@@ -22,6 +22,7 @@ pipeline {
                 script {
              //   withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'jenkins-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                 
+                sh "ls ${WORKSPACE}/docker"
                 sh "cd ${WORKSPACE}/docker"
                 sh "docker build -t oxer-html-image ."
                  }
