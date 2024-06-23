@@ -1,0 +1,34 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Clone GitHub Repo') {
+            steps {
+                script {
+                git branch: "${BRANCH}", credentialsId: 'jenkins-github-creds', url: "${REPO_URL}"
+            }
+        }
+        }
+        stage('Building Docker Image') {
+            steps {
+                script {
+             //   withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'jenkins-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                
+                sh "cd ${WORKSPACE}/docker"
+                sh "docker build -t oxer-html-image ."
+                 }
+                }           
+            }
+        
+        stage('Push To DockerHub Registry') {
+            steps {
+                script {
+               // withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'jenkins-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                sh """
+                docker push ityourway/oxer-html-repo:v001
+                """
+}
+                }
+            }
+        }
+    }
