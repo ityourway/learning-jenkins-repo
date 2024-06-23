@@ -1,6 +1,14 @@
 pipeline {
     agent any
-    
+    parameters {
+        string(name: 'BRANCH', defaultValue: 'main', description: 'Pass the name of branch to build from ')
+        string(name: 'REPO_URL', defaultValue: 'https://github.com/ityourway/learning-jenkins-repo.git', description: 'Pass the Repository url to build from ')
+        }
+    environment { 
+        BRANCH = "${params.BRANCH}"
+        REPO_URL = "${params.REPO_URL}"
+
+    }
     stages {
         stage('Clone GitHub Repo') {
             steps {
