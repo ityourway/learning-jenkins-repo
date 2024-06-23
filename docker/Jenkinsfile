@@ -60,7 +60,12 @@ pipeline {
                        sourceFiles: "",
                        removePrefix: "",
                        remoteDirectory: "",
-                       execCommand: "docker run -itd --name oxer-app -p 80:80 ityourway/oxer-html-repo:v001"
+                       execCommand: """
+                          docker stop oxer-app || true
+                          docker rm oxer-app || true
+                          docker rmi -f ityourway/oxer-html-repo:v001 || true
+                          docker run -itd --name oxer-app -p 80:80 ityourway/oxer-html-repo:v001
+                          """
                       )
                      ])
                    ])
