@@ -34,10 +34,15 @@ pipeline {
             steps {
                 script {
                // withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'jenkins-aws-creds', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                withCredentials([usernamePassword(credentialsId: 'jenkins_dockerhub_creds', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                 sh """
+                docker login --username="$USERNAME" --password="$PASSWORD"
                 docker tag oxer-html-image ityourway/oxer-html-repo:v001
                 docker push ityourway/oxer-html-repo:v001
                 """
+}
+                
+                
 }
                 }
             }
